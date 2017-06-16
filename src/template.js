@@ -4,6 +4,7 @@ import { timeFormat, titleFormat } from './util'
 import icon_email from './svg/email.svg'
 import icon_link from './svg/link.svg'
 import icon_github from './svg/github.svg'
+import icon_tags from './svg/tags.svg'
 
 export default {
 
@@ -40,7 +41,21 @@ export default {
 
         return issues
     },
+	labels(data) {
+        let { authors, user } = window.config
+        let labels = ''
+        for (let i = 0; i < data.length; i ++) {
+            const id = data[i].id;
+            const name = titleFormat(data[i].name)
+            labels += `
+                <a href="#labels=${name}">
+                    <h1>${name}</h1>
+                </a>
+            `
+        }
 
+        return labels
+    },
     comments(data) {
         let comments = ''
         let issue_url = data[0].html_url.split('#')[0]
@@ -76,7 +91,7 @@ export default {
         }
 
         if (email) {
-            social += `<a target="_blank" href="mailto:${email}">${icon_email}</a>`
+            social += `<a href="#labels">${icon_tags}</a>`
         }
 
         if (bio) {

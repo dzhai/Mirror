@@ -8,3 +8,5 @@ export const ISSUE = (user, repo, id) => `${host}/repos/${user}/${repo}/issues/$
 export const USER = (user) => `${host}/users/${user}`
 
 export const COMMENTS = (user, repo, id) => `${ISSUE(user, repo, id)}/comments`
+
+export const LABLES = (user, repo) => `${host}/repos/${user}/${repo}/labels`

@@ -1,15 +1,15 @@
 
 module.exports = {
 
-    title: 'rorriM',
+    title: 'dzhai',
 
-    user: 'LoeiFy',
+    user: 'dzhai',
 
-    repo: 'Recordum',
+    repo: 'www.dzhai.net',
 
-    token: '',
+    token: '507c456541c1edcbd5941890821b581786a8ad99',
 
-    authors: 'LoeiFy',
+    authors: 'dzhai',
 
     per_page: 5,
 

@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let scrollY = 0
     let total = 0
     let sort = 'updated'
+	let labels=''
 
     function ifPager() {
         $('#prev').style.display = page == 1 ? 'none' : 'inline-block'
@@ -49,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function get_issues() {
         const _issues = {
             url: api.ISSUES(user, repo),
-            data: { page, per_page, sort }
+            data: { page, per_page, sort,labels }
         }
 
         const _user = { url: api.USER(user) }
@@ -96,29 +97,48 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
+	function getLabels(user, repo){
+		load({ url: api.LABLES(user, repo) }).then(res => {
+                const { data: { closed_at } } = res[0]
 
+                if (closed_at) {
+                    return location.replace('/')
+                }
+                $('#posts').innerHTML = template.labels(res[0].data)
+                document.title = title
+				ready()
+		}).catch(err => location.replace('/'))
+	}
     function start() {
         issues_data = []
         page = 1
         total = 0
 
         $('#source').href = `https://github.com/${user}/${repo}/issues`
-
+		console.log(location);
         if (location.hash) {
-            current = 'single'
+          current = 'list'
             const hash = location.hash.split('#')[1]
+			console.log(hash);
+			if('labels'==hash){
+				getLabels(user,repo);
+			}else if(hash.indexOf('labels=')>-1){
+				labels=hash.split('=')[1]
+				get_issues()
+			}else{
+				current = 'single'				
+				load({ url: api.ISSUE(user, repo, hash) }).then(res => {
+					const { data: { closed_at } } = res[0]
 
-            load({ url: api.ISSUE(user, repo, hash) }).then(res => {
-                const { data: { closed_at } } = res[0]
+					if (closed_at) {
+						return location.replace('/')
+					}
 
-                if (closed_at) {
-                    return location.replace('/')
-                }
-
-                $('#post').innerHTML = template.issue(res[0].data)
-                document.title = `${titleFormat(res[0].data.title)} - ${title}`
-                ready()
-            }).catch(err => location.replace('/'))
+					$('#post').innerHTML = template.issue(res[0].data)
+					document.title = `${titleFormat(res[0].data.title)} - ${title}`
+					ready()
+				}).catch(err => location.replace('/'))
+			}
         } else {
             document.title = title
             get_issues()
@@ -144,11 +164,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (!hash && current == 'single') {
             return location.href = '/'
-        }
-
+        }	
         if (hash) {
+			if('labels'==hash){
+				getLabels(user,repo);
+				$('.container').classList.remove('post')
+				ifPager();
+				return 
+			}
+			if(hash.indexOf('labels=')>-1){
+				labels=hash.split('=')[1]
+				get_issues()
+				$('.container').classList.remove('post')
+				$('.container').classList.add('posts')
+				$('.left').style.display = 'block'
+				return
+			}
             $('.sandbox').classList.remove('active')
-
+			
             const issue = issues_data.find(issue => issue.number == hash)
 
             if (!issue) {
@@ -188,7 +221,6 @@ document.addEventListener('DOMContentLoaded', function() {
             box()
         }
     })
-
     $('.right').addEventListener('click', (e) => {
         e = e.target
 
