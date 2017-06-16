@@ -7,7 +7,7 @@ module.exports = {
 
     repo: 'www.dzhai.net',
 
-    token: '507c456541c1edcbd5941890821b581786a8ad99',
+    token: '885b54f34eeb6147d779015558198da89d371201',
 
     authors: 'dzhai',
 

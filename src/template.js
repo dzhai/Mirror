@@ -87,7 +87,7 @@ export default {
         let about = ''
 
         if (blog) {
-            social += `<a target="_blank" href="${blog}">${icon_link}</a>`
+            social += `<a href="${blog}">${icon_link}</a>`
         }
 
         if (email) {

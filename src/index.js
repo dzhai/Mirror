@@ -106,6 +106,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 $('#posts').innerHTML = template.labels(res[0].data)
                 document.title = title
+				$('.container').classList.remove('post')
+				$('#prev').style.display = 'none'
+				$('#next').style.display  = 'none'
 				ready()
 		}).catch(err => location.replace('/'))
 	}
@@ -168,8 +171,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (hash) {
 			if('labels'==hash){
 				getLabels(user,repo);
-				$('.container').classList.remove('post')
-				ifPager();
 				return 
 			}
 			if(hash.indexOf('labels=')>-1){
